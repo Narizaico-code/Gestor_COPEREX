@@ -1,0 +1,225 @@
+{
+  "info": {
+    "name": "COPEREX Suite",
+    "_postman_id": "coperex-suite-collection",
+    "description": "Colección para Auth_COPEREX y GestorCOPEREX (ADMIN_ROLE)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "auth_base", "value": "http://localhost:3005", "type": "string" },
+    { "key": "gestor_base", "value": "http://localhost:3006", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login (ADMIN)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{auth_base}}/api/v1/auth/login", "host": ["{{auth_base}}"], "path": ["api","v1","auth","login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@gestor.local\",\n  \"password\": \"Admin1234!\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 && pm.response.json().token) {",
+                  "  pm.collectionVariables.set('token', pm.response.json().token);",
+                  "  console.log('Token seteado');",
+                  "}",
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{auth_base}}/api/v1/auth/profile", "host": ["{{auth_base}}"], "path": ["api","v1","auth","profile"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Companies",
+      "item": [
+        {
+          "name": "List companies",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{gestor_base}}/api/v1/companies?limit=10&page=1",
+              "host": ["{{gestor_base}}"],
+              "path": ["api","v1","companies"],
+              "query": [
+                { "key": "limit", "value": "10" },
+                { "key": "page", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List A-Z",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{gestor_base}}/api/v1/companies?alphabetical=az&limit=20",
+              "host": ["{{gestor_base}}"],
+              "path": ["api","v1","companies"],
+              "query": [
+                { "key": "alphabetical", "value": "az" },
+                { "key": "limit", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Z-A",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{gestor_base}}/api/v1/companies?alphabetical=za&limit=20",
+              "host": ["{{gestor_base}}"],
+              "path": ["api","v1","companies"],
+              "query": [
+                { "key": "alphabetical", "value": "za" },
+                { "key": "limit", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filter by category",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{gestor_base}}/api/v1/companies?category=Tecnologia",
+              "host": ["{{gestor_base}}"],
+              "path": ["api","v1","companies"],
+              "query": [
+                { "key": "category", "value": "Tecnologia" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filter by years range",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{gestor_base}}/api/v1/companies?minYears=5&maxYears=20&sortBy=yearsOfExperience&sortOrder=desc",
+              "host": ["{{gestor_base}}"],
+              "path": ["api","v1","companies"],
+              "query": [
+                { "key": "minYears", "value": "5" },
+                { "key": "maxYears", "value": "20" },
+                { "key": "sortBy", "value": "yearsOfExperience" },
+                { "key": "sortOrder", "value": "desc" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search by text",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{gestor_base}}/api/v1/companies?search=demo",
+              "host": ["{{gestor_base}}"],
+              "path": ["api","v1","companies"],
+              "query": [
+                { "key": "search", "value": "demo" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create company",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{gestor_base}}/api/v1/companies", "host": ["{{gestor_base}}"], "path": ["api","v1","companies"] },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name", "value": "Empresa Demo", "type": "text" },
+                { "key": "impactLevel", "value": "alto", "type": "text" },
+                { "key": "yearsOfExperience", "value": "10", "type": "text" },
+                { "key": "category", "value": "Tecnologia", "type": "text" },
+                { "key": "notes", "value": "Demo", "type": "text" },
+                { "key": "logo", "type": "file", "src": [], "disabled": false }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get company by id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{gestor_base}}/api/v1/companies/:id",
+              "host": ["{{gestor_base}}"],
+              "path": ["api","v1","companies",":id"],
+              "variable": [{ "key": "id", "value": "<companyId>" }]
+            }
+          }
+        },
+        {
+          "name": "Update company",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{gestor_base}}/api/v1/companies/:id",
+              "host": ["{{gestor_base}}"],
+              "path": ["api","v1","companies",":id"],
+              "variable": [{ "key": "id", "value": "<companyId>" }]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "notes", "value": "Actualizado", "type": "text" },
+                { "key": "logo", "type": "file", "src": [] }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Export companies (Excel)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{gestor_base}}/api/v1/companies/export/excel",
+              "host": ["{{gestor_base}}"],
+              "path": ["api","v1","companies","export","excel"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
