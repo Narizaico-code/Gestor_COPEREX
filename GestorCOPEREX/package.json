@@ -1,0 +1,30 @@
+{
+  "name": "gestor-coperex",
+  "version": "1.0.0",
+  "description": "API REST para gestión de empresas con acceso exclusivo ADMIN_ROLE",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "lint": "echo \"Add linter if needed\""
+  },
+  "dependencies": {
+    "cloudinary": "^1.41.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "exceljs": "^4.4.0",
+    "express": "^5.2.1",
+    "express-validator": "^7.3.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.3.0",
+    "morgan": "^1.10.1",
+    "multer": "1.4.5-lts.2",
+    "multer-storage-cloudinary": "^4.0.0",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
